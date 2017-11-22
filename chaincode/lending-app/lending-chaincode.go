@@ -28,10 +28,10 @@ import (
 type SmartContract struct {
 }
 
-/* Define Tuna structure, with 4 properties.  
+/* Define Loan structure, with 4 properties.  
 Structure tags are used by encoding/json library
 */
-type Tuna struct {
+type Loan struct {
 	Borrower string `json:"borrower"`
 	Timestamp string `json:"timestamp"`
 	Details  string `json:"details"`
@@ -98,17 +98,15 @@ func (s *SmartContract) queryLoan(APIstub shim.ChaincodeStubInterface, args []st
 Will add test data (10 loan catches)to our network
  */
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
-	loan := []Tuna{
-		Tuna{Borrower: "456789", Details: "67.0006, -70.5476", Timestamp: "1504054225", Lender: "Miriam"},
-		Tuna{Borrower: "M83T", Details: "91.2395, -49.4594", Timestamp: "1504057825", Lender: "Dave"},
-		Tuna{Borrower: "T012", Details: "58.0148, 59.01391", Timestamp: "1493517025", Lender: "Igor"},
-		Tuna{Borrower: "P490", Details: "-45.0945, 0.7949", Timestamp: "1496105425", Lender: "Amalea"},
-		Tuna{Borrower: "S439", Details: "-107.6043, 19.5003", Timestamp: "1493512301", Lender: "Rafa"},
-		Tuna{Borrower: "J205", Details: "-155.2304, -15.8723", Timestamp: "1494117101", Lender: "Shen"},
-		Tuna{Borrower: "S22L", Details: "103.8842, 22.1277", Timestamp: "1496104301", Lender: "Leila"},
-		Tuna{Borrower: "EI89", Details: "-132.3207, -34.0983", Timestamp: "1485066691", Lender: "Yuan"},
-		Tuna{Borrower: "129R", Details: "153.0054, 12.6429", Timestamp: "1485153091", Lender: "Carlo"},
-		Tuna{Borrower: "49W4", Details: "51.9435, 8.2735", Timestamp: "1487745091", Lender: "Fatima"},
+	loan := []Loan{
+		Loan{Borrower: "Arnold", Details: "{'Tenor':'6','Amount':'10000','rate':'6'}}", Timestamp: "1504054225", Lender: "Irene"},
+		Loan{Borrower: "Bob", Details: "{'Tenor':'6','Amount':'10000','rate':'6'}}", Timestamp: "1504057825", Lender: "Jenny"},
+		Loan{Borrower: "calvin", Details: "{'Tenor':'6','Amount':'10000','rate':'6'}}", Timestamp: "1493517025", Lender: "Kathy"},
+		Loan{Borrower: "David", Details: "{'Tenor':'6','Amount':'10000','rate':'6'}}", Timestamp: "1496105425", Lender: "Leslie"},
+		Loan{Borrower: "Edward", Details: "{'Tenor':'6','Amount':'10000','rate':'6'}}", Timestamp: "1493512301", Lender: "Mike"},
+		Loan{Borrower: "Frankie", Details: "{'Tenor':'6','Amount':'10000','rate':'6'}}", Timestamp: "1494117101", Lender: "Norman"},
+		Loan{Borrower: "Gloria", Details: "{'Tenor':'6','Amount':'10000','rate':'6'}}", Timestamp: "1496104301", Lender: "Oslen"},
+		Loan{Borrower: "Helen", Details: "{'Tenor':'6','Amount':'10000','rate':'6'}}", Timestamp: "1485066691", Lender: "Patrick"},
 	}
 
 	i := 0
@@ -133,7 +131,7 @@ func (s *SmartContract) recordLoan(APIstub shim.ChaincodeStubInterface, args []s
 		return shim.Error("Incorrect number of arguments. Expecting 5")
 	}
 
-	var loan = Tuna{ Borrower: args[1], Details: args[2], Timestamp: args[3], Lender: args[4] }
+	var loan = Loan{ Borrower: args[1], Details: args[2], Timestamp: args[3], Lender: args[4] }
 
 	loanAsBytes, _ := json.Marshal(loan)
 	err := APIstub.PutState(args[0], loanAsBytes)
@@ -207,7 +205,7 @@ func (s *SmartContract) changeLoanLender(APIstub shim.ChaincodeStubInterface, ar
 	if loanAsBytes == nil {
 		return shim.Error("Could not locate loan")
 	}
-	loan := Tuna{}
+	loan := Loan{}
 
 	json.Unmarshal(loanAsBytes, &loan)
 	// Normally check that the specified argument is a valid lender of loan
